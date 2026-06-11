@@ -54,9 +54,10 @@ Plugin hooks run **in addition to** any hooks in your `~/.claude/settings.json`
 - If it also posts macOS banners, you would get every banner twice — keep
   one: either `claude plugin disable ccnotify@co-index`, or remove your own
   hook entry.
-- Using the [co-index/dotfiles](https://github.com/co-index/dotfiles) claude
-  module? The plugin detects its hook and stays silent automatically; no
-  duplicates.
+- The [co-index/dotfiles](https://github.com/co-index/dotfiles) claude
+  module installs this plugin directly. Older versions of it registered
+  their own hook copy in `settings.json` — the plugin detects that and
+  stays silent, so no duplicates either way.
 
 ### Troubleshooting
 
@@ -112,8 +113,9 @@ export CCNOTIFY_ACTIVATE_BUNDLE_ID="com.example.MyTerminal"
 - 已有 hook 干别的事（记日志、推送手机等）：无冲突，各跑各的；
 - 已有 hook 也弹 macOS 横幅：会每条重复两次，留一个即可——
   `claude plugin disable ccnotify@co-index` 或删掉你自己的 hook 条目；
-- 用的是 [co-index/dotfiles](https://github.com/co-index/dotfiles) 的
-  claude 模块？插件会自动检测它的 hook 并让位，不会重复。
+- [co-index/dotfiles](https://github.com/co-index/dotfiles) 的 claude
+  模块就是直接安装本插件的；它的旧版本曾在 `settings.json` 里注册过
+  自己的 hook 副本——插件能检测到并自动让位，两种情况都不会重复。
 
 ### 排查
 
