@@ -10,6 +10,8 @@ project name and the task you asked for — **click it and you land back in the
 exact app that was running Claude Code** (VS Code, Terminal, iTerm2, Warp,
 ghostty, Hyper).
 
+![ccnotify banner](../../docs/notification.png)
+
 ### Install
 
 ```text
@@ -48,6 +50,8 @@ Find a bundle id with `osascript -e 'id of app "Visual Studio Code"'`.
 需要你时（`Notification`）弹出横幅，显示项目名和任务内容——**点击横幅
 即可跳回运行 Claude Code 的那个应用**（VS Code、Terminal、iTerm2、
 Warp、ghostty、Hyper）。
+
+![ccnotify 横幅](../../docs/notification.png)
 
 ### 安装
 

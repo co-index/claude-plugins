@@ -2,6 +2,8 @@
 
 Claude Code plugins by [co-index](https://github.com/co-index).
 
+![ccnotify banner](docs/notification.png)
+
 ## Install
 
 ```text
