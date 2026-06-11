@@ -12,6 +12,11 @@ ghostty, Hyper).
 
 ![ccnotify banner](../../docs/notification.png)
 
+The custom icon and click-to-jump behaviour shown above come from the
+[ccnotify helper](https://github.com/co-index/ccnotify) (see Install below);
+with the plugin alone, notifications fall back to the plain osascript style
+— no custom icon, not clickable.
+
 ### Install
 
 ```text
@@ -52,6 +57,11 @@ Find a bundle id with `osascript -e 'id of app "Visual Studio Code"'`.
 Warp、ghostty、Hyper）。
 
 ![ccnotify 横幅](../../docs/notification.png)
+
+图中的自定义图标和点击跳转效果来自
+[ccnotify 助手](https://github.com/co-index/ccnotify)（见下方安装第二步）；
+只装插件时通知仍然可用，但是普通 osascript 样式——没有自定义图标，
+也不可点击。
 
 ### 安装
 
