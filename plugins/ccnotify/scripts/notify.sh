@@ -180,8 +180,13 @@ def activate_bundle_id():
 
 
 def find_ccnotify():
-    # Several unrelated tools are also named "ccnotify", so only accept a
-    # shim that references the ccnotify.app bundle the helper installs.
+    # CCNOTIFY_BIN points at the helper explicitly (custom install paths,
+    # tests); otherwise probe the usual locations. Several unrelated tools
+    # are also named "ccnotify", so only accept a shim that references the
+    # ccnotify.app bundle the helper installs.
+    override = os.environ.get("CCNOTIFY_BIN")
+    if override:
+        return override if os.access(override, os.X_OK) else ""
     candidates = [
         "/opt/homebrew/bin/ccnotify",
         "/usr/local/bin/ccnotify",

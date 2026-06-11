@@ -7,6 +7,11 @@ set -euo pipefail
 
 [[ "$(uname)" == "Darwin" ]] || exit 0
 
+# Explicit helper location (custom install paths, tests).
+if [[ -n "${CCNOTIFY_BIN:-}" && -x "${CCNOTIFY_BIN}" ]]; then
+  exit 0
+fi
+
 is_ccnotify_shim() {
   # Unrelated tools are also named "ccnotify"; ours is a shim that
   # references the ccnotify.app bundle.
