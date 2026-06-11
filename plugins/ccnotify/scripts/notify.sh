@@ -169,7 +169,7 @@ def activate_bundle_id():
     override = os.environ.get("CCNOTIFY_ACTIVATE_BUNDLE_ID")
     if override:
         return override
-    return {
+    mapped = {
         "vscode": "com.microsoft.VSCode",
         "WarpTerminal": "dev.warp.Warp-Stable",
         "Apple_Terminal": "com.apple.Terminal",
@@ -177,6 +177,24 @@ def activate_bundle_id():
         "ghostty": "com.mitchellh.ghostty",
         "Hyper": "co.zeit.hyper",
     }.get(os.environ.get("TERM_PROGRAM", ""), "")
+    if mapped:
+        return mapped
+    # Sessions hosted by the VS Code extension panel (not the integrated
+    # terminal) get no TERM_PROGRAM, only VSCODE_* injection markers.
+    if any(os.environ.get(k) for k in ("VSCODE_INJECTION", "VSCODE_PID", "VSCODE_IPC_HOOK", "VSCODE_CWD")):
+        if os.environ.get("CURSOR_TRACE_ID"):
+            return "com.todesktop.230313mzl4w4u92"  # Cursor sets VSCODE_* too
+        return "com.microsoft.VSCode"
+    # Headless sessions (background jobs, daemon-managed worktrees) carry no
+    # TERM_PROGRAM, so their banners would have nowhere to jump. An optional
+    # one-line file names a default target for them, e.g.:
+    #   echo com.microsoft.VSCode > ~/.claude/ccnotify-activate
+    config_dir = os.environ.get("CLAUDE_CONFIG_DIR") or os.path.expanduser("~/.claude")
+    try:
+        with open(os.path.join(config_dir, "ccnotify-activate"), encoding="utf-8") as fh:
+            return fh.read().strip()
+    except OSError:
+        return ""
 
 
 def find_ccnotify():

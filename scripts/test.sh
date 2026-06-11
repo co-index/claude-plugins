@@ -69,6 +69,38 @@ check "Notification body mentions attention" grep -q "Claude needs your attentio
 check "Notification appends the message" grep -q "Claude is waiting" "$tmp/notification-args"
 check "Notification uses the Ping sound" grep -qx "Ping" "$tmp/notification-args"
 
+echo "== activate target resolution =="
+# Sessions hosted by the VS Code extension panel have no TERM_PROGRAM, only
+# VSCODE_* markers; Cursor additionally sets CURSOR_TRACE_ID.
+run_activate_case() {
+  local out="$1"
+  shift
+  printf '%s' '{"hook_event_name":"Stop","cwd":"/tmp/myproj"}' \
+    | env -u TERM_PROGRAM -u VSCODE_INJECTION -u VSCODE_PID -u VSCODE_IPC_HOOK \
+        -u VSCODE_CWD -u CURSOR_TRACE_ID -u CCNOTIFY_ACTIVATE_BUNDLE_ID \
+        CCNOTIFY_BIN="$stub" CCNOTIFY_TEST_OUT="$out" "$@" \
+        bash "$plugin_dir/scripts/notify.sh"
+}
+
+run_activate_case "$tmp/ext-args" CLAUDE_CONFIG_DIR="$tmp/clean-claude" VSCODE_INJECTION=1
+check "VS Code extension panel maps to VS Code" grep -qx "com.microsoft.VSCode" "$tmp/ext-args"
+
+run_activate_case "$tmp/cursor-args" CLAUDE_CONFIG_DIR="$tmp/clean-claude" VSCODE_INJECTION=1 CURSOR_TRACE_ID=abc
+check "Cursor extension panel maps to Cursor" grep -qx "com.todesktop.230313mzl4w4u92" "$tmp/cursor-args"
+
+mkdir -p "$tmp/fallback-claude"
+printf 'com.example.editor\n' > "$tmp/fallback-claude/ccnotify-activate"
+run_activate_case "$tmp/fallback-args" CLAUDE_CONFIG_DIR="$tmp/fallback-claude"
+check "headless session uses the fallback file" grep -qx "com.example.editor" "$tmp/fallback-args"
+
+run_activate_case "$tmp/notarget-args" CLAUDE_CONFIG_DIR="$tmp/clean-claude"
+if grep -qx -- "-activate" "$tmp/notarget-args"; then
+  echo "FAIL: no -activate flag without any target"
+  failures=$((failures + 1))
+else
+  echo "ok: no -activate flag without any target"
+fi
+
 echo "== Deferral to the legacy dotfiles hook =="
 mkdir -p "$tmp/legacy-claude/hooks"
 printf '#!/bin/bash\ntrue\n' > "$tmp/legacy-claude/hooks/notify-macos.sh"

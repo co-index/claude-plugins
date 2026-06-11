@@ -36,11 +36,27 @@ and then to a non-clickable osascript notification.
 
 ### Configuration
 
-The app to focus on click is detected from `TERM_PROGRAM`. Override it with:
+The app to focus on click is resolved in this order:
 
-```sh
-export CCNOTIFY_ACTIVATE_BUNDLE_ID="com.example.MyTerminal"
-```
+1. `CCNOTIFY_ACTIVATE_BUNDLE_ID` (explicit override):
+
+   ```sh
+   export CCNOTIFY_ACTIVATE_BUNDLE_ID="com.example.MyTerminal"
+   ```
+
+2. `TERM_PROGRAM` (integrated terminals: VS Code, Terminal, iTerm2, Warp,
+   ghostty, Hyper).
+3. VS Code / Cursor extension-panel markers — sessions started from the
+   editor's Claude Code panel carry no `TERM_PROGRAM`, only `VSCODE_*`
+   variables, and are mapped to the right editor automatically.
+4. The optional fallback file `~/.claude/ccnotify-activate` — one bundle id
+   on a single line. This is what headless sessions (background jobs,
+   daemon-managed worktrees) use; without it their banners have no jump
+   target and clicking does nothing:
+
+   ```sh
+   echo com.microsoft.VSCode > ~/.claude/ccnotify-activate
+   ```
 
 Find a bundle id with `osascript -e 'id of app "Visual Studio Code"'`.
 
@@ -97,11 +113,26 @@ osascript 通知。
 
 ### 配置
 
-点击后聚焦的应用按 `TERM_PROGRAM` 自动识别，可用环境变量覆盖：
+点击后聚焦的应用按以下顺序解析：
 
-```sh
-export CCNOTIFY_ACTIVATE_BUNDLE_ID="com.example.MyTerminal"
-```
+1. `CCNOTIFY_ACTIVATE_BUNDLE_ID`（显式覆盖）：
+
+   ```sh
+   export CCNOTIFY_ACTIVATE_BUNDLE_ID="com.example.MyTerminal"
+   ```
+
+2. `TERM_PROGRAM`（集成终端：VS Code、Terminal、iTerm2、Warp、ghostty、
+   Hyper）。
+3. VS Code / Cursor 扩展面板标记——从编辑器侧边栏 Claude Code 面板启动
+   的会话没有 `TERM_PROGRAM`，只有 `VSCODE_*` 注入变量，会自动映射到对应
+   编辑器。
+4. 可选兜底文件 `~/.claude/ccnotify-activate`——一行一个 bundle id。
+   无界面会话（后台任务、daemon 托管的工作树）靠它确定跳转目标；不配置
+   则这类横幅点击无动作：
+
+   ```sh
+   echo com.microsoft.VSCode > ~/.claude/ccnotify-activate
+   ```
 
 查询应用 bundle id：`osascript -e 'id of app "Visual Studio Code"'`。
 
