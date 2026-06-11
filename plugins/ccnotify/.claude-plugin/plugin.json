@@ -1,11 +1,18 @@
 {
   "name": "ccnotify",
   "displayName": "ccnotify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Clickable macOS notifications when Claude Code finishes a task or needs your attention — click the banner to jump back to the app running Claude Code.",
-  "author": { "name": "co-index" },
+  "author": {
+    "name": "co-index"
+  },
   "homepage": "https://github.com/co-index/ccnotify",
   "repository": "https://github.com/co-index/claude-plugins",
   "license": "MIT",
-  "keywords": ["notifications", "macos", "hooks", "terminal-notifier"]
+  "keywords": [
+    "notifications",
+    "macos",
+    "hooks",
+    "terminal-notifier"
+  ]
 }

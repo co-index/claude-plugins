@@ -8,6 +8,16 @@ set -euo pipefail
 
 [[ "$(uname)" == "Darwin" ]] || exit 0
 
+# The co-index/dotfiles claude module registers the same notification logic
+# as a settings.json hook. If that hook is present and runnable, defer to it
+# so users who have both do not get every banner twice.
+claude_config_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+dotfiles_hook="$claude_config_dir/hooks/notify-macos.sh"
+if [[ -x "$dotfiles_hook" && -f "$claude_config_dir/settings.json" ]] \
+  && grep -q "hooks/notify-macos.sh" "$claude_config_dir/settings.json"; then
+  exit 0
+fi
+
 input="$(cat || true)"
 
 /usr/bin/python3 - "$input" <<'PY'
